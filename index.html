@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FiveM Loading Screen</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" />
+    <style>
+
+        html {
+            font-size: 10px;
+        }
+
+        @media screen and (width: 4096px) and (height: 2160px) {
+        html {
+            font-size: 31px;
+        }
+        }
+
+        @media screen and (width: 2560px) and (height: 1440px) {
+        html {
+            font-size: 16.75px;
+        }
+        }
+
+        @media screen and (width: 3440px) and (height: 1440px) {
+        html {
+            font-size: 17px;
+        }
+        }
+
+        @media screen and (width: 1920px) and (height: 1080px) {
+        html {
+            font-size: 12.5px;
+        }
+        }
+
+        @media screen and (width: 1920px) and (height: 1200px) {
+        html {
+            font-size: 16px;
+        }
+        }
+
+        @media screen and (width: 1920px) and (height: 1200px) {
+        html {
+            font-size: 16px;
+        }
+        }
+
+        @media screen and (width: 1920px) and (height: 1440px) {
+        html {
+            font-size: 16px;
+        }
+        }
+
+        @media screen and (width: 1600px) and (height: 1024px) {
+        html {
+            font-size: 14px;
+        }
+        }
+
+        @media screen and (width: 1440px) and (height: 900px) {
+        html {
+            font-size: 12px;
+        }
+        }
+
+        @media screen and (width: 1680px) and (height: 1050px) {
+        html {
+            font-size: 14.0px;
+        }
+        }
+
+        @media screen and (width: 1600px) and (height: 900px) {
+        html {
+            font-size: 13.3px;
+        }
+        }
+
+        @media screen and (width: 1600px) and (height: 1024px) {
+        html {
+            font-size: 13.3px;
+        }
+        }
+
+        @media screen and (width: 1768px) and (height: 992px) {
+        html {
+            font-size: 15px;
+        }
+        }
+        @media screen and (width: 1366px) and (height: 768px) {
+        html {
+            font-size: 9px;
+        }
+        }
+        @media screen and (width: 1400px) and (height: 1050px) {
+        html {
+            font-size: 11.7px;
+        }
+        }
+        @media screen and (width: 1280px) and (height: 1024px) {
+        html {
+            font-size: 11.7px;
+        }
+        }
+        @media screen and (width: 1280px) and (height: 720px) {
+        html {
+            font-size: 11px;
+        }
+        }
+        @media screen and (width: 1024px) and (height: 768px) {
+        html {
+            font-size: 10.05px;
+        }
+        }
+        @media screen and (width: 832px) and (height: 624px) {
+        html {
+            font-size: 8.05px;
+        }
+        }
+
+        @media screen and (width: 800px) and (height: 600px) {
+        html {
+            font-size: 8px;
+        }
+        }
+
+        body {
+        overflow: hidden;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        align-items: center;
+        justify-content: center;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes progress {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.8s ease-out forwards;
+        }
+
+        .progress-animation {
+            animation: progress 15s linear forwards;
+        }
+
+        .bg-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .fade-enter-active, .fade-leave-active {
+            transition: all 0.3s ease;
+        }
+        .fade-enter, .fade-leave-to {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .slide-left-enter-active,
+        .slide-left-leave-active,
+        .slide-right-enter-active,
+        .slide-right-leave-active
+
+        * {
+            -ms-overflow-style: none !important;  /* IE ve Edge */
+            scrollbar-width: none !important;     /* Firefox */
+        }
+
+        *::-webkit-scrollbar {
+            display: none !important;             
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .tooltip-left {
+            position: relative;
+        }
+        
+        .tooltip-left:before {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: calc(100% + 5px);
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 0.65rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+        }
+        
+        .tooltip-left:hover:before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px 2px rgba(139, 92, 246, 0.2); }
+            50% { box-shadow: 0 0 25px 5px rgba(139, 92, 246, 0.4); }
+            100% { box-shadow: 0 0 10px 2px rgba(139, 92, 246, 0.2); }
+        }
+
+        @keyframes smokeBorder {
+            0% { border-radius: 0.5rem 0.5rem 0.5rem 0.5rem; }
+            25% { border-radius: 0.8rem 0.5rem 0.7rem 0.6rem; }
+            50% { border-radius: 0.6rem 0.8rem 0.5rem 0.7rem; }
+            75% { border-radius: 0.7rem 0.6rem 0.8rem 0.5rem; }
+            100% { border-radius: 0.5rem 0.5rem 0.5rem 0.5rem; }
+        }
+
+        .music-player-active {
+            animation: pulseGlow 4s infinite, smokeBorder 12s infinite;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .music-player-active::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, 
+                rgba(139, 92, 246, 0.1), 
+                rgba(16, 185, 129, 0.1), 
+                rgba(139, 92, 246, 0.1));
+            background-size: 200% 200%;
+            animation: pulseBackground 3s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .music-player-active::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at center,
+                rgba(139, 92, 246, 0.15) 0%,
+                rgba(139, 92, 246, 0.1) 20%,
+                transparent 60%
+            );
+            top: -50%;
+            left: -50%;
+            animation: rotate 12s linear infinite;
+            opacity: 0.5;
+            filter: blur(15px);
+        }
+
+        @keyframes pulseBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .equalizer-bar {
+            width: 0.3rem;
+            background: linear-gradient(to top, rgba(139, 92, 246, 0.7), rgba(16, 185, 129, 0.7));
+            border-radius: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+            animation: equalizer 1.2s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+
+        .album-art-playing {
+            animation: float 6s infinite ease-in-out;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+        }
+
+        .album-art-playing img {
+            transform: scale(1.05);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-anim {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-anim::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+            transform: skewX(-25deg);
+        }
+
+        @keyframes shimmer {
+            100% { left: 200%; }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .side-particle {
+            position: absolute;
+            background: linear-gradient(to right, rgba(139, 92, 246, 0.3), rgba(16, 185, 129, 0.3));
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .side-line {
+            position: absolute;
+            background: linear-gradient(to bottom, rgba(139, 92, 246, 0.2), rgba(16, 185, 129, 0.2));
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes floatUpDown {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+            100% { opacity: 0.3; transform: scale(1); }
+        }
+        
+        .float-animation {
+            animation: floatUpDown 8s ease-in-out infinite;
+        }
+        
+        .pulse-animation {
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        .rotate-animation {
+            animation: rotate 20s linear infinite;
+        }
+
+        .light-beam {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0));
+            pointer-events: none;
+            z-index: -1;
+            transform-origin: top;
+        }
+        
+        @keyframes beam {
+            0% { opacity: 0; height: 0; }
+            50% { opacity: 0.7; height: 100px; }
+            100% { opacity: 0; height: 0; }
+        }
+        
+        .beam-animation {
+            animation: beam 3s ease-in-out infinite;
+        }
+
+        .hex-grid {
+            position: absolute;
+            width: 10rem;
+            height: 20rem;
+            opacity: 0.15;
+            background-image: 
+                linear-gradient(to right, rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(139, 92, 246, 0.3) 1px, transparent 1px);
+            background-size: 1rem 1rem;
+            transform: rotate(45deg);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 15rem;
+            height: 15rem;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .cyber-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(to right, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0));
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 0.7; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        
+        .scan-animation {
+            animation: scan 15s linear infinite;
+        }
+
+        @keyframes playingTrack {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulseIcon {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes waveform {
+            0% { height: 3px; }
+            50% { height: 12px; }
+            100% { height: 3px; }
+        }
+
+        .playlist-track {
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .playlist-track.playing {
+            background: linear-gradient(90deg, 
+                rgba(139, 92, 246, 0.1), 
+                rgba(16, 185, 129, 0.1), 
+                rgba(139, 92, 246, 0.1));
+            background-size: 200% 100%;
+            animation: playingTrack 4s linear infinite;
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .playlist-track.playing .track-icon {
+            color: rgb(139, 92, 246);
+            animation: pulseIcon 2s ease infinite;
+        }
+
+        .track-waveform {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 12px;
+            width: 40px;
+        }
+
+        .waveform-bar {
+            flex: 1;
+            background: rgb(139, 92, 246);
+            height: 3px;
+            border-radius: 1px;
+        }
+
+        .playing .waveform-bar {
+            animation: waveform 1s ease infinite;
+        }
+
+        .playing .waveform-bar:nth-child(2) { animation-delay: 0.2s; }
+        .playing .waveform-bar:nth-child(3) { animation-delay: 0.4s; }
+        .playing .waveform-bar:nth-child(4) { animation-delay: 0.6s; }
+
+        /* Karakter animasyonları */
+        .character-container {
+            transform-origin: bottom center;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+        }
+
+        .character-animation-left {
+            animation: characterFloatLeft 4s ease-in-out infinite;
+            transform-origin: bottom left;
+        }
+
+        .character-animation-right {
+            animation: characterFloatRight 4s ease-in-out infinite;
+            transform-origin: bottom right;
+        }
+
+        @keyframes characterFloatLeft {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(1deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-5px) rotate(-1deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        @keyframes characterFloatRight {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-1deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-12px) rotate(1deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* Karakter hover efektleri */
+        .character-container:hover img {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        .character-container img {
+            transition: transform 0.3s ease;
+            will-change: transform;
+        }
+
+        /* Karakter parlama efektleri */
+        .character-glow-left {
+            background: radial-gradient(
+                circle at 50% 50%,
+                rgba(139, 92, 246, 0.15) 0%,
+                rgba(139, 92, 246, 0.1) 25%,
+                rgba(139, 92, 246, 0.05) 50%,
+                transparent 70%
+            );
+            filter: blur(20px);
+            opacity: 0.7;
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .character-glow-right {
+            background: radial-gradient(
+                circle at 50% 50%,
+                rgba(16, 185, 129, 0.15) 0%,
+                rgba(16, 185, 129, 0.1) 25%,
+                rgba(16, 185, 129, 0.05) 50%,
+                transparent 70%
+            );
+            filter: blur(20px);
+            opacity: 0.7;
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .character-glow-left:hover,
+        .character-glow-right:hover {
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8B5CF6",
+                        secondary: "#10B981",
+                    },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+
+<body class="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div id="app">
+        <div v-if="ui" class="min-h-screen bg-cover bg-center bg-no-repeat relative overflow-hidden"
+            style="background-image: url('https://public.readdy.ai/ai/img_res/834ada222edb550fa4b892a7415466b8.jpg')">
+            
+      
+            <div class="absolute left-[4rem] bottom-0 z-20">
+                <div class="relative">
+                    <div class="absolute inset-0 character-glow-left"></div>
+                    <img src="./assets/img/component/players.png" 
+                         alt="Franklin" 
+                         class="h-[50rem] w-[50rem] object-contain relative z-10"/>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full h-[4rem] from-black/50 to-transparent"></div>
+
+            </div>
+
+            <div class="absolute right-[0rem] bottom-[-12rem] z-20">
+                <div class="relative">
+                    <div class="absolute inset-0 character-glow-right"></div>
+                    <img src="./assets/img/component/players-2.png" 
+                         alt="Trevor" 
+                         class="h-[70rem] w-[50rem] object-contain relative z-10"/>
+                </div>
+                <div class="absolute bottom-0 right-0 w-full h-[4rem] from-black/50 to-transparent"></div>
+            </div>
+
+            <div class="absolute left-0 top-0 bottom-0 w-[15rem] overflow-hidden">
+                <div v-for="n in 5" :key="`left-particle-${n}`" 
+                     class="side-particle float-animation"
+                     :style="{
+                         left: (Math.random() * 10) + 'rem',
+                         top: (Math.random() * 100) + 'vh',
+                         width: (Math.random() * 1 + 0.5) + 'rem',
+                         height: (Math.random() * 1 + 0.5) + 'rem',
+                         animationDelay: (Math.random() * 5) + 's',
+                         animationDuration: (Math.random() * 5 + 5) + 's'
+                     }">
+                </div>
+
+                <div v-for="n in 3" :key="`left-line-${n}`" 
+                     class="side-line pulse-animation"
+                     :style="{
+                         left: (Math.random() * 10 + 2) + 'rem',
+                         top: (Math.random() * 30) + 'vh',
+                         width: '1px',
+                         height: (Math.random() * 20 + 10) + 'rem',
+                         animationDelay: (Math.random() * 3) + 's',
+                         animationDuration: (Math.random() * 4 + 3) + 's'
+                     }">
+                </div>
+
+                <div class="hex-grid" style="left: -5rem; top: 20vh;"></div>
+
+                <div v-for="n in 8" :key="`left-beam-${n}`" 
+                     class="light-beam beam-animation"
+                     :style="{
+                         left: (Math.random() * 12 + 1) + 'rem',
+                         top: (Math.random() * 100) + 'vh',
+                         transform: 'rotate(' + (Math.random() * 60 - 30) + 'deg)',
+                         animationDelay: (Math.random() * 5) + 's',
+                         animationDuration: (Math.random() * 3 + 2) + 's'
+                     }">
+                </div>
+
+                <div class="glow-effect pulse-animation" style="left: -5rem; top: 30vh;"></div>
+
+                <div class="cyber-line scan-animation" style="left: 0; width: 15rem; top: -10px;"></div>
+            </div>
+
+            <div class="absolute right-0 top-0 bottom-0 w-[15rem] overflow-hidden">
+                <div v-for="n in 5" :key="`right-particle-${n}`" 
+                     class="side-particle float-animation"
+                     :style="{
+                         right: (Math.random() * 10) + 'rem',
+                         top: (Math.random() * 100) + 'vh',
+                         width: (Math.random() * 1 + 0.5) + 'rem',
+                         height: (Math.random() * 1 + 0.5) + 'rem',
+                         animationDelay: (Math.random() * 5) + 's',
+                         animationDuration: (Math.random() * 5 + 5) + 's'
+                     }">
+                </div>
+
+                <div v-for="n in 3" :key="`right-line-${n}`" 
+                     class="side-line pulse-animation"
+                     :style="{
+                         right: (Math.random() * 10 + 2) + 'rem',
+                         top: (Math.random() * 30) + 'vh',
+                         width: '1px',
+                         height: (Math.random() * 20 + 10) + 'rem',
+                         animationDelay: (Math.random() * 3) + 's',
+                         animationDuration: (Math.random() * 4 + 3) + 's'
+                     }">
+                </div>
+
+                <div class="hex-grid" style="right: -5rem; top: 50vh;"></div>
+
+                <div v-for="n in 8" :key="`right-beam-${n}`" 
+                     class="light-beam beam-animation"
+                     :style="{
+                         right: (Math.random() * 12 + 1) + 'rem',
+                         top: (Math.random() * 100) + 'vh',
+                         transform: 'rotate(' + (Math.random() * 60 - 30) + 'deg)',
+                         animationDelay: (Math.random() * 5) + 's',
+                         animationDuration: (Math.random() * 3 + 2) + 's'
+                     }">
+                </div>
+
+                <div class="glow-effect pulse-animation" style="right: -5rem; top: 70vh;"></div>
+
+                <div class="cyber-line scan-animation" style="right: 0; width: 15rem; top: -5px;"></div>
+            </div>
+            
+            <div class="min-h-screen flex flex-col items-center justify-between p-[1rem] bg-blur relative z-10">
+                <div class="w-full max-w-[48rem] mt-[2rem] slide-in">
+                    <div class="flex items-center justify-between mb-[1.5rem]">
+                        <h1 class="text-[1.5rem] font-bold text-white">Welcome to Los Santos</h1>
+                        <div class="text-right">
+                            <p class="text-gray-300 text-[1.125rem]">
+                                Players Online: <span class="text-primary">{{ serverInfo.playerCount.current }}/{{ serverInfo.playerCount.max }}</span>
+                            </p>
+                            <p class="text-gray-300 text-[1rem]">
+                                Server Time: <span class="text-primary">{{ serverInfo.serverTime }}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-[1rem] mb-[1rem]">
+                        <div class="bg-black bg-opacity-50 p-[1rem] rounded-[0.5rem] border border-primary/20">
+                            <h2 class="text-[1.125rem] text-white mb-[1.25rem]">Server Rules</h2>
+                            <div class="max-h-[10.1rem] overflow-y-auto pr-[0.5rem] -mr-[0.5rem]">
+                                <ul class="text-gray-300 space-y-[0.25rem]">
+                                    <li v-for="rule in serverRules" :key="rule" class="flex items-center">
+                                        <i class="ri-checkbox-circle-line text-primary mr-[0.5rem] text-[1.25rem]"></i>
+                                        <span class="text-[1rem]">{{ rule }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-black bg-opacity-50 p-[1rem] rounded-[0.5rem] border border-primary/20">
+                            <h2 class="text-[1.125rem] text-white mb-[0.5rem]">Server Gallery</h2>
+                            <div class="relative overflow-hidden rounded-[0.5rem] h-[12rem] group">
+                                <div class="relative w-full h-full">
+                                    <transition-group name="fade" tag="div" class="w-full h-full">
+                                        <div v-for="(image, index) in serverImages" :key="image.id"
+                                             v-show="index === currentImageIndex"
+                                             class="absolute top-0 left-0 w-full h-full cursor-pointer"
+                                             @click="openImageViewer(serverImages[index])">
+                                            <img :src="image.url" 
+                                                 class="w-full h-full object-cover rounded-[0.5rem]" 
+                                                 :alt="image.description" />
+                                            
+                                            <!-- Açıklama Overlay -->
+                                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-[0.75rem] text-white">
+                                                <p class="text-[0.875rem] font-medium">{{ image.description }}</p>
+                                            </div>
+                                        </div>
+                                    </transition-group>
+                                </div>
+
+                                <div class="absolute inset-y-0 left-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-x-full group-hover:translate-x-0 transition-all">
+                                    <button @click.stop="prevImage" 
+                                            class="bg-black/50 hover:bg-primary/80 text-white p-[0.5rem] rounded-r-lg transition-all">
+                                        <i class="ri-arrow-left-s-line text-[1.5rem]"></i>
+                                    </button>
+                                </div>
+                                <div class="absolute inset-y-0 right-0 flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-full group-hover:translate-x-0 transition-all">
+                                    <button @click.stop="nextImage" 
+                                            class="bg-black/50 hover:bg-primary/80 text-white p-[0.5rem] rounded-l-lg transition-all">
+                                        <i class="ri-arrow-right-s-line text-[1.5rem]"></i>
+                                    </button>
+                                </div>
+
+                                <div class="absolute bottom-[0.75rem] left-0 right-0 flex justify-center gap-[0.5rem] z-10">
+                                    <button v-for="(image, index) in serverImages" 
+                                            :key="image.id"
+                                            @click.stop="goToImage(index)"
+                                            class="w-[0.5rem] h-[0.5rem] rounded-full transition-all"
+                                            :class="[currentImageIndex === index ? 'bg-primary scale-125' : 'bg-white/50 hover:bg-white']">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-[0.75rem] mb-[1rem]">
+                        <a v-for="link in quickLinks" :key="link.title" 
+                             :href="link.url"
+                             target="_blank"
+                             class="bg-black bg-opacity-50 p-[1rem] rounded-[0.5rem] border border-primary/20 hover:bg-primary/20 transition-all duration-300 cursor-pointer group">
+                            <i :class="[link.icon, 'text-primary text-[1.875rem] mb-[0.5rem] group-hover:scale-110 transition-transform']"></i>
+                            <h3 class="text-white text-[1.125rem]">{{ link.title }}</h3>
+                            <p class="text-gray-400 text-[0.875rem]">{{ link.description }}</p>
+                        </a>
+                    </div>
+
+                    <div class="bg-black bg-opacity-50 p-[1rem] rounded-[0.5rem] border border-primary/20 transition-all duration-500 mb-[1rem]"
+                         :class="{'music-player-active': musicPlayer.isPlaying}">
+                        <div class="flex items-center justify-between mb-[1rem]">
+                            <div class="flex items-center">
+                                <div class="relative overflow-hidden rounded-[0.5rem] mr-[1rem]" 
+                                     :class="{'album-art-playing': musicPlayer.isPlaying}">
+                                    <img :src="musicPlayer.track.albumArt" 
+                                         class="w-[3rem] h-[3rem] object-cover transition-all duration-300" 
+                                         :class="{'scale-105': musicPlayer.isPlaying}"
+                                         alt="Album Art" />
+                                    <!-- Ritim efekti - müzik çalarken görünür -->
+                                    <div v-if="musicPlayer.isPlaying" class="absolute bottom-0 left-0 right-0 flex justify-around items-end h-[1rem] px-[0.25rem] bg-black/30 backdrop-blur-sm">
+                                        <div v-for="n in 5" :key="n" class="equalizer-bar" 
+                                             :style="{
+                                                 height: (Math.random() * 50 + 30) + '%',
+                                                 animationDuration: (Math.random() * 0.8 + 0.4) + 's',
+                                                 animationDelay: (n * 0.1) + 's',
+                                                 animation: 'equalizer ' + (Math.random() * 1 + 0.7) + 's infinite'
+                                             }">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-white text-[1.125rem]">{{ musicPlayer.track.title }}</h3>
+                                    <p class="text-gray-400 text-[0.875rem]">{{ musicPlayer.track.artist }}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-[1rem]">
+                                <button @click="updateVolume(-10)" class="text-gray-400 hover:text-white transition-transform hover:scale-110">
+                                    <i class="ri-volume-down-line text-[1.25rem]"></i>
+                                </button>
+                                <div class="w-[6rem] h-[0.25rem] bg-gray-700 rounded-full overflow-hidden cursor-pointer relative"
+                                     ref="volumeSlider"
+                                     @click="setVolume($event)"
+                                     @mousedown="startVolumeChange"
+                                     @touchstart="startVolumeChange">
+                                    <div class="h-full bg-primary rounded-full transition-all duration-300" 
+                                         :style="{ width: musicPlayer.volume + '%' }"></div>
+                                </div>
+                                <button @click="updateVolume(10)" class="text-gray-400 hover:text-white transition-transform hover:scale-110">
+                                    <i class="ri-volume-up-line text-[1.25rem]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-[0.75rem] relative z-[1]">
+                            <div class="w-full h-[0.5rem] bg-gray-700 rounded-full overflow-hidden cursor-pointer hover:bg-gray-600 transition-colors group relative"
+                                 @click="seekToPosition($event)"
+                                 @mousedown="seekToPosition($event)"
+                                 :class="{'progress-anim': musicPlayer.isPlaying}">
+                                <div class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300 pointer-events-none" 
+                                     :style="{ width: progressPercentage + '%' }"></div>
+                                <div class="absolute top-[-1rem] right-0 bottom-[-1rem] left-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                    <span class="text-white text-[0.625rem] font-medium bg-black/70 backdrop-blur-sm px-[0.5rem] py-[0.25rem] rounded-full flex items-center">
+                                        <i class="ri-cursor-fill mr-[0.25rem] text-[0.7rem]"></i>
+                                        Click to skip
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-[0.75rem] text-gray-400 mt-[0.5rem]">
+                                <span class="flex items-center">
+                                    <i class="ri-time-line mr-[0.25rem] text-primary text-[0.8rem]"></i>
+                                    {{ formattedCurrentTime }}
+                                </span>
+                                <span class="flex items-center">
+                                    {{ formattedDuration }}
+                                    <i class="ri-time-line ml-[0.25rem] text-primary text-[0.8rem]"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-center space-x-[1.5rem]">
+                            <button @click="previousTrack" 
+                                    class="text-white bg-black/40 hover:bg-primary/80 p-[0.5rem] rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group">
+                                <i class="ri-skip-back-fill text-[1.25rem] group-hover:scale-110 transition-transform"></i>
+                            </button>
+                            
+                            <button @click="togglePlay" 
+                                    class="text-white bg-gradient-to-r from-primary to-secondary rounded-full p-[0.75rem] hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 transform hover:scale-105 active:scale-95 relative z-[9999]">
+                                <i :class="['text-[1.5rem]', musicPlayer.isPlaying ? 'ri-pause-fill' : 'ri-play-fill']"></i>
+                            </button>
+                            
+                            <button @click="nextTrack" 
+                                    class="text-white bg-black/40 hover:bg-primary/80 p-[0.5rem] rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group">
+                                <i class="ri-skip-forward-fill text-[1.25rem] group-hover:scale-110 transition-transform"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- <div class="mt-[0.75rem] flex justify-center items-center gap-[1rem] text-[0.75rem] text-gray-400">
+                            <div class="flex items-center px-[0.6rem] py-[0.4rem] rounded-[0.4rem] border border-primary/20 transition-colors group">
+                                <span class="bg-transparent rounded-[0.3rem] px-[0.5rem] py-[0.25rem] text-white mr-[0.5rem] font-medium shadow-md flex items-center justify-center min-w-[4rem] h-[1.5rem] border border-gray-600 group-hover:border-primary/50 transition-all relative overflow-hidden">
+                                    <span class="absolute inset-x-0 bottom-0 h-[0.15rem] bg-gradient-to-r from-primary to-secondary opacity-70"></span>
+                                    <span class="absolute inset-x-[0.2rem] top-[0.15rem] h-[0.1rem] bg-white/10 rounded-full"></span>
+                                    <span class="text-[0.7rem] tracking-wider">SPACE</span>
+                                </span>
+                                <span class="text-white/90 group-hover:text-white transition-colors">Play/Pause</span>
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <div v-if="musicPlayer.isPlaying" class="w-full flex justify-center mt-[0.5rem] mb-[1rem]">
+                        <div class="flex items-end space-x-[0.2rem] h-[1rem]">
+                            <div v-for="n in 16" :key="n" 
+                                 class="w-[0.15rem] bg-primary/70 rounded-full"
+                                 :style="{
+                                     height: (Math.random() * 80 + 20) + '%',
+                                     animationDuration: (Math.random() * 0.6 + 0.4) + 's',
+                                     animationDelay: (n * 0.05) + 's',
+                                     animation: 'equalizer ' + (Math.random() * 0.8 + 0.6) + 's infinite'
+                                 }">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-black bg-opacity-50 p-[1rem] rounded-[0.5rem] border border-primary/20 mb-[1rem]">
+                        <h3 class="text-white text-[1.125rem] mb-[0.75rem] flex items-center justify-between">
+                            <div class="flex items-center bg-black/40 px-[0.5rem] py-[0.25rem] rounded-full">
+                                <i class="ri-team-line text-primary mr-[0.5rem]"></i>
+                                <span>Staff Team</span>
+                            </div>
+                            <div class="text-[0.75rem] text-gray-400 flex items-center bg-black/40 px-[0.5rem] py-[0.25rem] rounded-full">
+                                <i class="ri-mouse-line mr-[0.25rem]"></i>
+                                <span>Scroll to see more</span>
+                            </div>
+                        </h3>
+                        
+                        <div class="max-h-[8.5rem] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pr-[0.5rem] -mr-[0.5rem]">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-[0.5rem]">
+                                <div v-for="member in staffMembers" :key="member.name" 
+                                     class="group flex items-center space-x-[0.5rem] p-[0.5rem] rounded-[0.5rem] bg-black/30 hover:bg-black/40 transition-all duration-300 border border-primary/10 hover:border-primary/20">
+                                    <div class="relative">
+                                        <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                        <img :src="member.avatar" 
+                                             class="w-[2.5rem] h-[2.5rem] rounded-full border border-transparent group-hover:border-primary/20 transition-all duration-300" 
+                                             :alt="`${member.name} Avatar`" />
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white text-[0.9rem] font-medium group-hover:text-primary transition-colors duration-300">{{ member.name }}</h4>
+                                        <span class="text-[0.8rem] text-primary/80 bg-primary/5 px-[0.4rem] py-[0.1rem] rounded-full">{{ member.role }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Server Console -->
+                    <div class="bg-black bg-opacity-50 p-[1rem] rounded-[0.5rem] border border-primary/20 mb-[1rem] relative" style="z-index: 9999;">
+                        <div class="flex items-center justify-between mb-[0.5rem]">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-white text-[1.125rem]">Server Console</h3>
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs">Online</span>
+                                    <span class="px-2 py-0.5 rounded bg-primary/20 text-primary text-xs">{{ consoleLogs.length }} logs</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-[0.5rem] relative" style="z-index: 10000;">
+                                <div class="flex items-center gap-2 mr-2">
+                                    <button class="text-gray-400 hover:text-white transition-colors text-sm" 
+                                            @click="consoleLogs = []">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                    <button class="text-gray-400 hover:text-white transition-colors text-sm"
+                                            @click="$refs.consoleLog.scrollTop = $refs.consoleLog.scrollHeight">
+                                        <i class="ri-arrow-down-line"></i>
+                                    </button>
+                                </div>
+                                <span class="text-[0.75rem] text-gray-400">Auto-scroll</span>
+                                <button @click="autoScroll = !autoScroll"
+                                        :class="['px-[0.5rem] py-[0.125rem] rounded-[0.25rem] text-[0.75rem] cursor-pointer transition-all duration-300', 
+                                                autoScroll ? 'bg-primary text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600']">
+                                    {{ autoScroll ? 'ON' : 'OFF' }}
+                                </button>
+                            </div>
+                        </div>
+                        <div ref="consoleLog" 
+                             class="bg-black/60 rounded-[0.5rem] p-[0.75rem] h-[8rem] overflow-y-auto font-mono text-[0.75rem] leading-tight relative group">
+                            <div v-for="(log, index) in consoleLogs" :key="index"
+                                 class="flex flex-wrap items-center w-full gap-x-1 mb-[0.2rem] min-h-[0.5rem] hover:bg-white/5 px-1 py-0.5 rounded transition-colors"
+                                 :class="[
+                                     log.type === 'success' ? 'text-green-400 border-l-2 border-green-400/50' : 
+                                     log.type === 'warning' ? 'text-yellow-400 border-l-2 border-yellow-400/50' : 
+                                     log.type === 'error' ? 'text-red-400 border-l-2 border-red-400/50' : 
+                                     'text-gray-300'
+                                 ]">
+                                <span class="opacity-50 whitespace-nowrap text-[0.65rem] font-medium">{{ log.time }}</span>
+                                <span v-if="log.module" class="text-primary whitespace-nowrap text-[0.65rem] bg-primary/10 px-1.5 py-0.5 rounded">{{ log.module }}</span>
+                                <span class="break-all">{{ log.message }}</span>
+                            </div>
+                            
+                            <!-- Scroll indicator -->
+                            <div v-show="$refs.consoleLog && $refs.consoleLog.scrollHeight > $refs.consoleLog.clientHeight" 
+                                 class="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 text-white/50 px-2 py-1 rounded text-xs">
+                                <i class="ri-mouse-line mr-1"></i>Scroll for more
+                            </div>
+                        </div>
+                        
+                        <!-- Log type indicators -->
+                        <div class="flex items-center gap-3 mt-2 text-xs">
+                            <span class="flex items-center gap-1 text-green-400">
+                                <i class="ri-checkbox-circle-line"></i>Success
+                            </span>
+                            <span class="flex items-center gap-1 text-yellow-400">
+                                <i class="ri-error-warning-line"></i>Warning
+                            </span>
+                            <span class="flex items-center gap-1 text-red-400">
+                                <i class="ri-close-circle-line"></i>Error
+                            </span>
+                            <span class="flex items-center gap-1 text-primary">
+                                <i class="ri-information-line"></i>Info
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full max-w-[48rem] mt-[1rem] mb-[1rem] bg-black bg-opacity-50 p-[0.75rem] rounded-[0.5rem] border border-primary/20">
+                    <div class="flex items-center justify-between text-white mb-[0.5rem]">
+                        <div class="flex items-center">
+                            <i class="ri-loader-4-line text-primary mr-[0.5rem] animate-spin text-[1.25rem]"></i>
+                            <span class="text-[1rem]">{{ loadingInfo.currentFile || loadingInfo.statuses[loadingInfo.currentStatus] }}</span>
+                        </div>
+                        <span class="text-[1rem] font-medium text-primary">{{ loadingInfo.progress }}%</span>
+                    </div>
+                    
+                    <div class="w-full h-[0.5rem] bg-black bg-opacity-70 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-primary to-secondary relative" 
+                             :style="{ width: loadingInfo.progress + '%' }">
+                            <div v-if="musicPlayer.isPlaying" class="absolute top-0 left-0 right-0 bottom-0 flex items-end justify-around">
+                                <div v-for="n in 8" :key="n" 
+                                     class="h-full w-[0.15rem] bg-white/30"
+                                     :style="{
+                                         animationDuration: (Math.random() * 0.6 + 0.4) + 's',
+                                         animationDelay: (n * 0.1) + 's',
+                                         animation: 'equalizer ' + (Math.random() * 0.8 + 0.6) + 's infinite'
+                                     }">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center text-[0.875rem] text-gray-400 mt-[0.5rem]">
+                        <div class="flex items-center">
+                            <i class="ri-information-line mr-[0.5rem] text-primary"></i>
+                            <span>{{ loadingInfo.tips[loadingInfo.currentTip] }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span v-if="loadingInfo.totalFiles > 0">
+                                {{ loadingInfo.filesLoaded }}/{{ loadingInfo.totalFiles }} files
+                            </span>
+                            <i class="ri-refresh-line ml-[0.5rem] text-primary animate-spin"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div v-if="imageViewer.isOpen" 
+             class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95"
+             @click="closeImageViewer"
+             @wheel.prevent>
+
+            <div class="fixed top-0 left-0 right-0 p-4 flex justify-between items-center z-[9999] bg-gradient-to-b from-black/80 to-transparent">
+                <div class="text-white">
+                    <h3 class="text-lg font-medium mb-1" v-if="imageViewer.currentImage">{{ imageViewer.currentImage.description }}</h3>
+                    <p class="text-sm text-gray-300">Click and drag to move • Use mouse wheel to zoom</p>
+                </div>
+
+                <div class="flex gap-3">
+                    <button @click.stop="resetImageZoom" 
+                            class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-all flex items-center gap-2">
+                        <i class="ri-zoom-in-line text-white"></i>
+                        <span class="text-white text-sm">Reset Zoom</span>
+                    </button>
+
+                    <button @click.stop="closeImageViewer" 
+                            class="bg-white/10 hover:bg-red-500/80 px-4 py-2 rounded-lg transition-all flex items-center gap-2">
+                        <i class="ri-close-line text-white"></i>
+                        <span class="text-white text-sm">Close (ESC)</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative max-w-[90vw] max-h-[90vh]" @click.stop>
+                <div class="relative overflow-hidden rounded-lg cursor-move"
+                     @mousedown="startImageDrag"
+                     :style="{
+                         transform: `scale(${imageViewer.scale}) translate(${imageViewer.translateX}px, ${imageViewer.translateY}px)`,
+                         transition: imageViewer.isDragging ? 'none' : 'transform 0.2s ease-out'
+                     }">
+                    <img v-if="imageViewer.currentImage"
+                         :src="imageViewer.currentImage.url" 
+                         :alt="imageViewer.currentImage.description"
+                         class="max-w-full max-h-[90vh] object-contain select-none" 
+                         draggable="false" />
+                </div>
+                
+                <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-sm py-2 px-4 rounded-full flex items-center gap-2">
+                    <i class="ri-zoom-in-line"></i>
+                    <span>Zoom Level: {{ Math.round(imageViewer.scale * 100) }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="./vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="./assets/data.js"></script>
+</body>
+
+</html>
